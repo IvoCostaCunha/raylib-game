@@ -5,15 +5,30 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "CUnit/CUnit.h"
-#include "raylib.h"
-#include "raymath.h"
+#include <CUnit/CUnit.h>
+#include <raylib.h>
+#include <raymath.h>
 
-struct DynamicAsset {
+#include "utils/utils.h"
+
+
+struct s_DynamicAsset {
   char *name;
   unsigned int x;
   unsigned int y;
 };
+
+struct s_Font {
+  Font font;
+  const char *name;
+};
+
+// void freeStrArray(struct s_StrArray *strArray) {
+//   for(unsigned long int i=0; i < strArray->usedSize; i++) {
+//     free(strArray->array[i]);
+//   }
+//   free(strArray->array);
+// }
 
 int main(int argc, char *argv[]) {
 
@@ -25,7 +40,24 @@ int main(int argc, char *argv[]) {
 
 #ifdef RELEASE
   printf("* %s (RELEASE build %s)\n", NAME, VERSION);
+  SetTraceLogLevel(0);
 #endif
+
+  struct s_StrArray array;
+  initStrArray(&array, 0);
+
+  addToStrArray(&array, "a");
+  addToStrArray(&array, "b");
+  addToStrArray(&array, "c");
+  addToStrArray(&array, "d");
+  // addToStrArray(&array, "c");
+  // addToStrArray(&array, "d");
+
+  deleteFromStrArray(&array, 0);
+
+  for (unsigned int i = 0; i < array.size; i++) {
+    printf("* %s\n", array.array[i]);
+  }
 
   unsigned int preferedFps = 0;
 
@@ -64,10 +96,40 @@ int main(int argc, char *argv[]) {
 
   preferedFps > 0 ? SetTargetFPS(preferedFps) : SetTargetFPS(60);
 
+  // Fonts
+  // const char *fontFamilyDirectoryPaths[] = {"./assets/otf/Mechanical"};
+
+  // struct s_Font fonts[50];
+
+  // for (unsigned int i = 0; i < sizeof(fontFamilyDirectoryPaths); i++) {
+  //   int k = 0;
+  //   if (DirectoryExists(fontFamilyDirectoryPaths[i])) {
+  //     FilePathList fileList =
+  //     LoadDirectoryFiles(fontFamilyDirectoryPaths[i]); for (long unsigned int
+  //     j = 0; j < sizeof(fileList.paths); j++) {
+  //       fonts[k].font = LoadFont(fileList.paths[j]);
+  //       fonts[k].name = GetFileNameWithoutExt(fileList.paths[j]);
+  //       k++;
+  //     }
+  //   } else {
+  //     printf("* [!] Font directory %s doesn't exist and could not be loaded "
+  //            "into GPU "
+  //            "memory\n",
+  //            fontFamilyDirectoryPaths[i]);
+  //   }
+  // }
+
+  // printf("Loaded fonts :\n");
+  // for (long unsigned int i = 0; i < sizeof(fonts); i++) {
+  //   strcmp(fonts[i].name, "") == 0 ? printf("Font %ld : %s\n", i,
+  //   fonts[i].name)
+  //                                  : printf("No fonts loaded\n");
+  // }
+
+  struct s_DynamicAsset player = {"player", 20, 20};
+
   ShowCursor();
   EnableCursor();
-
-  struct DynamicAsset player = {"player", 20, 20};
 
   while (!WindowShouldClose()) {
 
@@ -91,10 +153,12 @@ int main(int argc, char *argv[]) {
     }
 
     BeginDrawing();
+
     ClearBackground(WHITE);
     // DrawFPS(GetRenderWidth() - 100, 10);
     DrawText(infoText, 10, 5, 14, BLACK);
     DrawCircle(player.x, player.y, 25.00, BLUE);
+
     EndDrawing();
   }
 
