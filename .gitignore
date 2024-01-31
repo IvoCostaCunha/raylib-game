@@ -2,5 +2,8 @@
 build
 doc
 
+# logs
+logs/*.xml
+
 # vscode
 .vscode

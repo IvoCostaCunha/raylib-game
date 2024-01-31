@@ -10,6 +10,7 @@
 #include <raymath.h>
 
 #include "utils/utils.h"
+#include "../test/UnitsTests.h"
 
 
 struct s_DynamicAsset {
@@ -23,41 +24,29 @@ struct s_Font {
   const char *name;
 };
 
-// void freeStrArray(struct s_StrArray *strArray) {
-//   for(unsigned long int i=0; i < strArray->usedSize; i++) {
-//     free(strArray->array[i]);
-//   }
-//   free(strArray->array);
-// }
-
 int main(int argc, char *argv[]) {
 
 #ifdef DEBUG
   printf("* %s (DEBUG build %s)\n", NAME, VERSION);
   printf("* argc : %d\n", argc);
   printf("* argv : %s\n", argv[0]);
+
+  // CUnit unit tests
+  if (initializeUnitTests() == EXIT_FAILURE) return EXIT_FAILURE;
+  StrArrayTests();
+  runAllUnitTests();
+  runAllUnitTestsAutomatic();
+  if(hasFailedAnUnitTest()) {
+    return EXIT_FAILURE;
+  }
+  freeUnitTests();
 #endif
+
 
 #ifdef RELEASE
   printf("* %s (RELEASE build %s)\n", NAME, VERSION);
-  SetTraceLogLevel(0);
+  SetTraceLogLevel(LOG_ERROR);
 #endif
-
-  struct s_StrArray array;
-  initStrArray(&array, 0);
-
-  addToStrArray(&array, "a");
-  addToStrArray(&array, "b");
-  addToStrArray(&array, "c");
-  addToStrArray(&array, "d");
-  // addToStrArray(&array, "c");
-  // addToStrArray(&array, "d");
-
-  deleteFromStrArray(&array, 0);
-
-  for (unsigned int i = 0; i < array.size; i++) {
-    printf("* %s\n", array.array[i]);
-  }
 
   unsigned int preferedFps = 0;
 

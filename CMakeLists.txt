@@ -15,7 +15,7 @@ set(OTHER_LIBRARIES
 
 set(INNER_LIBRARIES
     utils
-)
+) 
 
 # Specific target CMAKE configuration
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -35,16 +35,24 @@ foreach(LIB ${INNER_LIBRARIES})
     add_subdirectory(src/${LIB})
 endforeach()
 
+# Adding test libs/files
+add_subdirectory(test)
+
+
 # Fetch source files
 file(GLOB SOURCE_FILES src/*.c)
 
 # Compilation settings and lib linking
 add_executable(${CMAKE_PROJECT_NAME} ${SOURCE_FILES})
-target_link_libraries(${CMAKE_PROJECT_NAME} ${PKG_LIBRARIES} ${OTHER_LIBRARIES} ${INNER_LIBRARIES})
+target_link_libraries(${CMAKE_PROJECT_NAME} ${PKG_LIBRARIES} ${OTHER_LIBRARIES} ${INNER_LIBRARIES} test)
 
-# Including of inner libs headers
+# Including UnitTests.h
+target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE test)
+
+
+# Including inner libs headers
 foreach(LIB ${INNER_LIBRARIES})
-    target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC ${LIB})
+    target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${LIB})
 endforeach()
 
 # Installation of the project
