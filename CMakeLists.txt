@@ -15,6 +15,7 @@ set(OTHER_LIBRARIES
 
 set(INNER_LIBRARIES
     utils
+    engine
 ) 
 
 # Specific target CMAKE configuration

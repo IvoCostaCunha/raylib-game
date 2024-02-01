@@ -1,5 +1,6 @@
 #include "UnitsTests.h"
 
+#include <stdarg.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,19 +25,23 @@ int initializeUnitTests() {
   }
 }
 
-void freeUnitTests() {
-  CU_cleanup_registry();
+void freeUnitTests() { CU_cleanup_registry(); }
+
+void addUnitTestSuites(void(f_tests)(void), ...) {
+  va_list argList;
+  va_start(argList, f_tests);
+  f_tests();
+  va_end(argList);
 }
 
-void runAllUnitTests() { 
+void runAllUnitTestsBasic() {
   CU_basic_set_mode(CU_BRM_SILENT);
   CU_basic_run_tests();
-  if(CU_get_number_of_failures() > 0) {
+  if (CU_get_number_of_failures() > 0) {
     printf("\n* [T] Unit tests have failed !\n");
     CU_basic_show_failures(CU_get_failure_list());
     printf("\n");
-  }
-  else {
+  } else {
     printf("\n* [T] All unit test were successfull !");
   }
 }
@@ -49,10 +54,8 @@ void runAllUnitTestsAutomatic() {
   CU_set_output_filename(filenamePrefix);
   CU_automated_run_tests();
   char filename[34];
-  sprintf(filename,"%s-Results.xml", filenamePrefix);
+  sprintf(filename, "%s-Results.xml", filenamePrefix);
   printf("\n* [T] Unit test log saved as %s\n\n", filename);
 }
 
-bool hasFailedAnUnitTest() {
-  return CU_get_number_of_failures() > 0;
-}
+bool hasFailedAnUnitTest() { return CU_get_number_of_failures() > 0; }

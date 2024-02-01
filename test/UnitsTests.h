@@ -4,7 +4,8 @@
 
 int initializeUnitTests();
 void freeUnitTests();
-void runAllUnitTests();
+void addUnitTestSuites(void(f_tests)(void), ...);
+void runAllUnitTestsBasic();
 void runAllUnitTestsAutomatic();
 bool hasFailedAnUnitTest();
 
