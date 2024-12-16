@@ -1,5 +1,5 @@
 #pragma once
-#include <CUnit/TestRun.h>
+#include <CUnit/CUnit.h>
 #include <stdbool.h> 
 
 int initializeUnitTests();
